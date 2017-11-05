@@ -5,7 +5,7 @@ import sqlalchemy
 
 databases = {
   'test': 'sqlite:///test.sqlite3',
-  'install': 'mysql+pymysql://root:%s@%s/datamining' % (os.environ['MYSQL_ROOT_PASSWORD'], os.environ.get('MYSQL_HOST', '127.0.0.1')),
+  'install': 'mysql+pymysql://root:%s@%s/datamining' % (os.environ.get('MYSQL_ROOT_PASSWORD', ''), os.environ.get('MYSQL_HOST', '127.0.0.1')),
 }
 
 db = sys.argv[1]
