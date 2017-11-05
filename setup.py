@@ -9,9 +9,14 @@ databases = {
 }
 
 db = sys.argv[1]
-con = sqlalchemy.create_engine(databases.get(db, db))
+con = sqlalchemy.create_engine(databases.get(db, db), pool_recycle=1)
 
-for mod in reversed(['diagnosis', 'hospitals', 'practitioners']): # todo: programically find these
-  print('Processing datamining.%s...' % (mod))
-  importlib.import_module('datamining.%s' % (mod)).create(con)
-
+for root, dirs, files in os.walk('datamining'):
+  for f in files:
+    mod, ext = os.path.splitext(f)
+    if ext == '.py':
+      print('Processing datamining.%s...' % (mod))
+      try:
+        importlib.import_module('datamining.%s' % (mod)).create(con)
+      except Exception as e:
+        print('[ERROR: datamining.%s]: %s' % (mod, e))
