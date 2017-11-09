@@ -1,0 +1,18 @@
+version: '3'
+services:
+  data:
+    build: .
+    image: fdudatamining:data
+    environment:
+      - MYSQL_HOST=database
+      - MYSQL_ROOT_PASSWORD
+    volumes:
+      - ./.cache/:/root/.cache/
+    external_links:
+      - system_database_1:database
+    networks:
+      - default
+      - system_default
+networks:
+  system_default:
+    external: true

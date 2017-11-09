@@ -4,7 +4,7 @@ The purpose of this repository is to document the data fetch and clean steps use
 
 ## Installation
 
-This is meant to download, populate, and clean the data used in our open data analysis. After setting up the system (see http://github.com/fdudatamining/system), run `python setup.py install` to populate the database.
+This is meant to download, populate, and clean the data used in our open data analysis. After setting up the system (see http://github.com/fdudatamining/system), run `docker-compose build && docker-compose run data` to populate the database.
 
 ## Description
 

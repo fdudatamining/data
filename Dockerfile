@@ -13,4 +13,3 @@ RUN pip3 install --no-cache-dir --upgrade pip && \
 		pip3 install --no-cache-dir -r requirements.txt
 
 CMD /root/setup.sh $MYSQL_HOST $MYSQL_ROOT_PASSWORD
-

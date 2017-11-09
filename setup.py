@@ -9,14 +9,16 @@ databases = {
 }
 
 db = sys.argv[1]
+table = sys.argv[2] if len(sys.argv) > 2 else None
 con = sqlalchemy.create_engine(databases.get(db, db), pool_recycle=1)
 
 for root, dirs, files in os.walk('datamining'):
   for f in files:
     mod, ext = os.path.splitext(f)
-    if ext == '.py':
-      print('Processing datamining.%s...' % (mod))
-      try:
-        importlib.import_module('datamining.%s' % (mod)).create(con)
-      except Exception as e:
-        print('[ERROR: datamining.%s]: %s' % (mod, e))
+    if ext == '.py' and mod != "__init__":
+      if table is None or table == mod:
+        print('Processing datamining.%s...' % (mod))
+        try:
+          importlib.import_module('datamining.%s' % (mod)).create(con)
+        except Exception as e:
+          print('[ERROR: datamining.%s]: %s' % (mod, e))

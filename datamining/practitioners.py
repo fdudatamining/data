@@ -4,6 +4,10 @@ import numpy as np
 
 resource = 'https://data.medicare.gov/api/views/mj5m-pzi6/rows.csv?accessType=DOWNLOAD'
 
+renames = {
+  'Committed to heart health through the Million Hearts® initiative.': 'Million Hearts',
+}
+
 converters = {
   'NPI': int_,
   'PAC ID': int_,
@@ -20,7 +24,8 @@ converters = {
 
 def create(con):
   print('Downloading from %s...' % (resource))
-  df = pd.read_csv(resource, converters=converters)
+  df = read_csv_cached(resource, converters=converters)
+  df = df.rename(columns=renames)
 
   print('Generating practitions.ccn...')
   ccn = pd.DataFrame(np.concatenate([
@@ -49,7 +54,7 @@ def create(con):
     'Hospital Affiliation LBN'
   ]).dropna().drop_duplicates()
   ccn['Hospital affiliation CCN'] = ccn['Hospital affiliation CCN'].astype(int)
-  ccn.to_sql('practitioners.ccn', con, index=False)
+  ccn.to_sql('practitioners.ccn', con, index=False, if_exists='replace')
 
   print('Generating practitions.primary...')
   df.drop([
@@ -58,4 +63,4 @@ def create(con):
     'Hospital affiliation LBN 3',
     'Hospital affiliation LBN 4',
     'Hospital affiliation LBN 5',
-  ], axis=1).to_sql('practitioners.primary', con, index=False)
+  ], axis=1).to_sql('practitioners.primary', con, index=False, if_exists='replace')
